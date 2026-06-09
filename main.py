@@ -29,6 +29,36 @@ def exibir_atividades(vetor_atividades):
         print(f"    Prioridade: {atv.prioridade} | Participantes: {atv.participantes}")
         print(f"    Peso Calculado (DP): {atv.peso}\n")
 
+def gerar_vereditos(qtd_guloso, qtd_dp, beneficio_guloso, beneficio_dp, tempo_guloso, tempo_dp):
+    """Gera os vereditos da comparação entre os dois algoritmos."""
+    vereditos = []
+    
+    # Comparação de quantidade
+    if qtd_guloso > qtd_dp:
+        vereditos.append("O Guloso conseguiu agendar mais atividades em quantidade.")
+    elif qtd_dp > qtd_guloso:
+        vereditos.append("A DP conseguiu agendar mais atividades em quantidade.")
+    else:
+        vereditos.append("Ambos os algoritmos agendaram a mesma quantidade de atividades.")
+    
+    # Comparação de benefício
+    if beneficio_dp > beneficio_guloso:
+        vereditos.append("A DP conseguiu um benefício (prioridade x público) maior que o Guloso.")
+    elif beneficio_guloso > beneficio_dp:
+        vereditos.append("O Guloso conseguiu um benefício (prioridade x público) maior que a DP.")
+    else:
+        vereditos.append("Ambos os algoritmos conseguiram o mesmo benefício (prioridade x público).")
+    
+    # Comparação de tempo
+    if beneficio_dp > beneficio_guloso and tempo_dp < tempo_guloso:
+        vereditos.append("A DP foi mais eficiente, conseguindo um benefício maior em menos tempo.")
+    elif beneficio_guloso > beneficio_dp and tempo_guloso < tempo_dp:
+             vereditos.append("O Guloso foi mais eficiente, conseguindo um benefício maior em menos tempo.")
+    elif (beneficio_dp > beneficio_guloso and tempo_dp >= tempo_guloso) or \
+         (beneficio_guloso > beneficio_dp and tempo_guloso >= tempo_dp):
+             vereditos.append("Um algoritmo teve benefício maior, mas levou mais tempo. A eficiência é relativa.")                 
+    return vereditos
+
 def executar_e_comparar(nome_teste, vetor_atividades):
     """Executa ambas as estratégias no vetor fornecido e exibe os resultados."""
     print(f"\n{'='*50}\n{nome_teste} ({len(vetor_atividades)} Atividades)\n{'='*50}")
@@ -62,10 +92,13 @@ def executar_e_comparar(nome_teste, vetor_atividades):
     print(f" -> Tempo de Execução: {tempo_dp:.6f} segundos")
     
     print("\n[Veredito do Caso]")
-    if len(resultado_guloso) >= len(resultado_dp):
-        print(" -> O Guloso conseguiu agendar igual ou mais atividades em quantidade.")
-    if beneficio_dp >= beneficio_guloso:
-        print(" -> A DP conseguiu um benefício (prioridade x público) maior ou igual ao Guloso.")
+    vereditos = gerar_vereditos(
+        len(resultado_guloso), len(resultado_dp),
+        beneficio_guloso, beneficio_dp,
+        tempo_guloso, tempo_dp
+    )
+    for veredito in vereditos:
+        print(f" -> {veredito}")
 
 # ==========================================
 # BLOCO PRINCIPAL (EXECUÇÃO)
